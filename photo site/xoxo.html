@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Men axmoqmanmi?</title>
+<style>
+body { font-family: Arial; background:#0f172a; color:#e5e7eb; text-align:center; padding:50px; }
+input, button, select { padding:10px; margin:10px; border-radius:5px; border:none; font-size:16px; }
+button { cursor:pointer; font-weight:bold; }
+button.no { background:#ef4444; color:white; }
+.result { margin-top:20px; font-size:20px; color:#22c55e; }
+.hidden { display:none; }
+</style>
+</head>
+<body>
+
+<div id="welcome">
+  <h1>Salom!</h1>
+  <p>Iltimos, ismingiz va familiyangizni kiriting:</p>
+  <input type="text" id="fullname" placeholder="Ism Familiya">
+  <p>Nechta savolga javob bermoqchisiz? (1-35)</p>
+  <input type="number" id="numQuestions" min="1" max="35" value="10">
+  <br>
+  <button onclick="startQuiz()">Boshlash</button>
+</div>
+
+<div id="quiz" class="hidden">
+  <h2 id="greeting"></h2>
+  <h3 id="question"></h3>
+  <button onclick="vote('yes')">Ha</button>
+  <button class="no" onclick="vote('no')">Yo'q</button>
+  <div class="result" id="progress"></div>
+</div>
+
+<div id="final" class="hidden">
+  <h2>Natija</h2>
+  <p id="finalResult"></p>
+</div>
+
+<script>
+const questions = [
+"Men bugun choyni suv bilan aralashtirdimmi?",
+"Men socklarni teskari kiyganmanmi?",
+"Men qovoqni to‘g‘ri o‘stirdimmi?",
+"Men tongda nonni to‘g‘ri ochmadimmi?",
+"Men kecha televizorni xona bilan olib chiqdimmi?",
+"Men bugun kitobni pastdan o‘qidimmi?",
+"Men piyozni shirin deb o‘yladimmi?",
+"Men stulni orqa tomonga tortib o‘tirgandimmi?",
+"Men bugun internetni teskari ishlatdimmi?",
+"Men muzqaymoqni issiq suv bilan aralashtirdimmi?",
+"Men kompyuterni teskari yoqdimmi?",
+"Men oshxonada stulni olib ketdimmi?",
+"Men kiyimni teskari kiydimmi?",
+"Men telefonni muzlatgichga qo‘ydimmi?",
+"Men bugun nonni suv bilan yedimmi?",
+"Men kecha choyni mikroto‘lqin bilan isitdimmi?",
+"Men mushukni kompyuterga o‘tirib qo‘ydimmi?",
+"Men ertalab soatni 25 ga qo‘ydimmi?",
+"Men oshxonada stolni oynaga qo‘ydimmi?",
+"Men poyabzalni televizor bilan aralashtirdimmi?",
+"Men bugun soatni qovoqqa solib qo‘ydimmi?",
+"Men internetni telefon orqali qovoqqa uladimmi?",
+"Men kitobni choy bilan yedimmi?",
+"Men stulni dushga olib kirgandimmi?",
+"Men piyozni shokolad deb o‘yladimmi?",
+"Men oshxonada muzlatgichni yotqizib qo‘ydimmi?",
+"Men telefonni oshxonaga olib kirgandimmi?",
+"Men bugun stol ustida yugurdimmi?",
+"Men choyni xona bilan aralashtirdimmi?",
+"Men kecha soatni non bilan urib qo‘ydimmi?",
+"Men mushukni televizorga uladimmi?",
+"Men kecha nonni kompyuterga qo‘ydimmi?",
+"Men kitobni stol ostiga yashirdimmi?",
+"Men bugun stulni oynaga qo‘ydimmi?",
+"Men kecha piyozni shokolad deb o‘yladimmi?"
+];
+
+let votes = [];
+let current = 0;
+let maxQuestions = 10;
+
+function startQuiz(){
+  const name = document.getElementById("fullname").value.trim();
+  if(!name){ alert("Iltimos, ismingizni kiriting"); return; }
+  maxQuestions = parseInt(document.getElementById("numQuestions").value);
+  if(maxQuestions < 1 || maxQuestions > 35){ alert("1 dan 35 gacha raqam kiriting"); return; }
+
+  document.getElementById("welcome").classList.add("hidden");
+  document.getElementById("quiz").classList.remove("hidden");
+  document.getElementById("greeting").textContent = `${name}, Sayidbek saytiga xush kelibsiz!`;
+
+  votes = [];
+  current = 0;
+  nextQuestion();
+}
+
+function nextQuestion(){
+  if(current >= maxQuestions){
+    showResult();
+    return;
+  }
+  // Random savol
+  let qIndex = Math.floor(Math.random()*questions.length);
+  document.getElementById("question").textContent = questions[qIndex];
+  document.getElementById("progress").textContent = `Savol ${current+1} / ${maxQuestions}`;
+}
+
+function vote(answer){
+  votes.push(answer);
+  current++;
+  nextQuestion();
+}
+
+function showResult(){
+  document.getElementById("quiz").classList.add("hidden");
+  document.getElementById("final").classList.remove("hidden");
+  const yesCount = votes.filter(v => v==='yes').length;
+  const percent = Math.round((yesCount/votes.length)*100);
+  document.getElementById("finalResult").textContent = `Sizning axmoqligingiz darajasi: ${percent}%`;
+}
+</script>
+
+</body>
+</html>
